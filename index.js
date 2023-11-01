@@ -39,8 +39,22 @@ app.post(ROUTES.daty+"/alldates", (req,res)=>{
 	res.json(dates)
 })
 
+app.get(ROUTES.gotowezmiany+"/getreadysshifts", (req,res)=>{
+	res.json(gotowezmiany)
+})
+
 app.get(ROUTES.gotowezmiany,(req, res)=>{
 	res.json(gotowezmiany)
+})
+
+app.get(ROUTES.gotowezmiany+"/getunaddedshifts",(req,res)=>{
+	const results = daty
+		.map((t1) => ({
+			...t1,
+			...ratownicy.find((r) => r.id_ratownika === t1.id_ratownika),
+		}))
+		.filter((t1) => !daty.some((t2) => t2.id_ratownika === t1.id_ratownika && t2.start === t1.start && t2.end === t1.end));
+	res.json(results)
 })
 
 app.listen(port, () => {
